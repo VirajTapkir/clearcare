@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(file /Users/pratikkale/Downloads/ClearCare/public/*)",
+      "Bash(npm run *)",
+      "Bash(curl -s http://localhost:5173)",
+      "Bash(npx vite *)",
+      "Bash(curl -s http://localhost:5174)",
+      "Bash(node node_modules/vite/bin/vite.js --version)",
+      "Bash(node node_modules/vite/bin/vite.js --port 5174)",
+      "Bash(curl -sv http://localhost:5174)",
+      "Bash(npm install *)",
+      "Bash(curl -s http://localhost:5174/src/App.jsx)",
+      "Bash(curl -s \"http://localhost:5174/@fs/Users/pratikkale/Downloads/ClearCare/src/components/Header.jsx\")"
+    ]
+  }
+}
