@@ -21,6 +21,7 @@ export default function HospitalList({
   selectedHospitals,
   onToggleHospital,
   onCompare,
+  onBook,
   onBack,
   userProfile,
 }) {
@@ -42,7 +43,6 @@ export default function HospitalList({
     return a.distance - b.distance;
   });
 
-  // Compute filtered radius info — hospitals near user's ZIP
   const userZip = userProfile?.zip;
 
   return (
@@ -58,7 +58,7 @@ export default function HospitalList({
             ? `Estimated costs based on average treatment for ${diagnosis.name}.`
             : 'Browse hospitals and select up to 3 to compare.'}
           {userZip && <> Showing results near <strong>ZIP {userZip}</strong>.</>}
-          {' '}You can select up to <strong>3 hospitals</strong>.
+          {' '}Select up to <strong>3 to compare</strong>, or click <strong>Book</strong> on any hospital to start your care journey.
         </p>
       </div>
 
@@ -79,13 +79,23 @@ export default function HospitalList({
       {selectedHospitals.length > 0 && (
         <div className="compare-bar">
           <span>{selectedHospitals.length} hospital{selectedHospitals.length > 1 ? 's' : ''} selected</span>
-          <button
-            className="btn-primary"
-            onClick={onCompare}
-            disabled={selectedHospitals.length < 2}
-          >
-            Compare {selectedHospitals.length} Hospitals
-          </button>
+          <div style={{ display: 'flex', gap: 10 }}>
+            {selectedHospitals.length === 1 && onBook && (
+              <button
+                className="btn-outline"
+                onClick={() => onBook(selectedHospitals[0])}
+              >
+                Book this hospital →
+              </button>
+            )}
+            <button
+              className="btn-primary"
+              onClick={onCompare}
+              disabled={selectedHospitals.length < 2}
+            >
+              Compare {selectedHospitals.length} Hospitals
+            </button>
+          </div>
         </div>
       )}
 
@@ -158,17 +168,33 @@ export default function HospitalList({
                       )}
                     </div>
                   )}
-                  <button
-                    className={`select-btn ${selected ? 'selected' : ''}`}
-                    onClick={() => onToggleHospital(h.id)}
-                    disabled={disabled}
-                  >
-                    {selected ? '✓ Selected' : disabled ? 'Max 3 Selected' : 'Select'}
-                  </button>
+                  <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
+                    <button
+                      className={`select-btn ${selected ? 'selected' : ''}`}
+                      onClick={() => onToggleHospital(h.id)}
+                      disabled={disabled}
+                      style={{ flex: 1 }}
+                    >
+                      {selected ? '✓ Selected' : disabled ? 'Max 3' : 'Compare'}
+                    </button>
+                    {onBook && (
+                      <button
+                        className="btn-primary"
+                        onClick={() => onBook(h.id)}
+                        style={{
+                          flex: 1,
+                          padding: '8px 12px',
+                          fontSize: 13,
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
+                        Book →
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
 
-              {/* Covered services block */}
               {h.coveredServices && h.coveredServices.length > 0 && (
                 <div className="covered-services">
                   <div className="cs-title">Services covered at this hospital</div>

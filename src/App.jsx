@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import './App.css';
+import './TreatmentTimeline.css';
 import Header from './components/Header.jsx';
 import LandingPage from './components/LandingPage.jsx';
 import OnboardingFlow from './components/OnboardingFlow.jsx';
@@ -7,6 +8,7 @@ import SymptomChecker from './components/SymptomChecker.jsx';
 import DiagnosisResult from './components/DiagnosisResult.jsx';
 import HospitalList from './components/HospitalList.jsx';
 import HospitalComparison from './components/HospitalComparison.jsx';
+import TreatmentTimeline from './components/TreatmentTimeline.jsx';
 
 const STEPS = {
   LANDING: 'landing',
@@ -15,6 +17,7 @@ const STEPS = {
   DIAGNOSIS: 'diagnosis',
   HOSPITALS: 'hospitals',
   COMPARISON: 'comparison',
+  TIMELINE: 'timeline',
 };
 
 export default function App() {
@@ -24,9 +27,9 @@ export default function App() {
   const [customSymptomLabels, setCustomSymptomLabels] = useState([]);
   const [diagnosis, setDiagnosis] = useState(null);
   const [selectedHospitals, setSelectedHospitals] = useState([]);
+  const [bookedHospitalId, setBookedHospitalId] = useState(null);
 
   function handleStart() {
-    // If already onboarded, skip straight to symptoms; otherwise, run onboarding first
     if (userProfile) {
       setStep(STEPS.SYMPTOMS);
     } else {
@@ -62,7 +65,6 @@ export default function App() {
       setSelectedHospitals([]);
       setStep(STEPS.HOSPITALS);
     } else if (builtInIds.length === 0) {
-      // Only custom symptoms — can't match to diagnosis database, so go to hospital list
       setDiagnosis(null);
       setSelectedHospitals([]);
       setStep(STEPS.HOSPITALS);
@@ -95,12 +97,18 @@ export default function App() {
     setStep(STEPS.COMPARISON);
   }
 
+  function handleBookHospital(id) {
+    setBookedHospitalId(id);
+    setStep(STEPS.TIMELINE);
+  }
+
   function handleLogoClick() {
     setStep(STEPS.LANDING);
     setSelectedSymptoms([]);
     setCustomSymptomLabels([]);
     setDiagnosis(null);
     setSelectedHospitals([]);
+    setBookedHospitalId(null);
   }
 
   function goBack() {
@@ -110,6 +118,7 @@ export default function App() {
       [STEPS.DIAGNOSIS]: STEPS.SYMPTOMS,
       [STEPS.HOSPITALS]: diagnosis ? STEPS.DIAGNOSIS : STEPS.SYMPTOMS,
       [STEPS.COMPARISON]: STEPS.HOSPITALS,
+      [STEPS.TIMELINE]: STEPS.HOSPITALS,
     };
     setStep(backMap[step] || STEPS.LANDING);
   }
@@ -153,6 +162,7 @@ export default function App() {
             selectedHospitals={selectedHospitals}
             onToggleHospital={handleToggleHospital}
             onCompare={handleCompare}
+            onBook={handleBookHospital}
             onBack={goBack}
             userProfile={userProfile}
           />
@@ -163,13 +173,23 @@ export default function App() {
             selectedHospitalIds={selectedHospitals}
             diagnosis={diagnosis}
             onBack={goBack}
+            onBook={handleBookHospital}
             userProfile={userProfile}
+          />
+        )}
+
+        {step === STEPS.TIMELINE && (
+          <TreatmentTimeline
+            selectedHospitalIds={bookedHospitalId ? [bookedHospitalId] : selectedHospitals}
+            diagnosis={diagnosis}
+            userProfile={userProfile}
+            onBack={goBack}
           />
         )}
       </main>
 
       <footer className="footer">
-        <p>© 2025 ClearCare — Healthcare clarity for international students. For informational purposes only.</p>
+        <p>© 2025 Intra — Healthcare clarity for international students. For informational purposes only.</p>
       </footer>
     </div>
   );
