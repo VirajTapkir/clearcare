@@ -4,7 +4,7 @@
 
 ClearCare is a healthcare cost-transparency web app built for international students (F-1, J-1, and other non-immigrant visa holders) in the United States. It checks whether a hospital accepts your specific insurance plan, estimates your real out-of-pocket cost *before* you walk in, and tracks your entire care journey through to the final bill — so a routine visit never turns into a surprise four-figure bill.
 
-🔗 **Live demo:** [clearcare.vercel.app](https://clearcare.vercel.app) *(replace with your actual Vercel URL)*
+🔗 **Live demo:** [clearcare.vercel.app](https://clearcare-beige.vercel.app)
 
 ---
 
